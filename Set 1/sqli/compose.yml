@@ -2,33 +2,25 @@ services:
   web:
     build: .
     ports:
-      - "8080:80"
+      - "9081:80"
     depends_on:
       - db
     environment:
       - MYSQL_HOST=db
-      - MYSQL_USER=ctf
-      - MYSQL_PASSWORD=ctfpass
-      - MYSQL_DATABASE=ctfdb
+      - MYSQL_USER=svc_3f9b2e1a
+      - MYSQL_PASSWORD=X9mD3r7qPz2vK1sL4tYw0bR8
+      - MYSQL_DATABASE=serendibdb
 
   db:
     image: mysql:8.0
     environment:
-      MYSQL_ROOT_PASSWORD: rootpass
-      MYSQL_DATABASE: ctfdb
-      MYSQL_USER: ctf
-      MYSQL_PASSWORD: ctfpass
+      MYSQL_ROOT_PASSWORD: "R00t!S3r3nd!b2025"
+      MYSQL_DATABASE: serendibdb
+      MYSQL_USER: svc_3f9b2e1a
+      MYSQL_PASSWORD: "X9mD3r7qPz2vK1sL4tYw0bR8"
     volumes:
       - db_data:/var/lib/mysql
       - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
-
-  phpmyadmin:
-    image: phpmyadmin:latest
-    environment:
-      PMA_HOST: db
-      MYSQL_ROOT_PASSWORD: rootpass
-    ports:
-      - "8081:80"
 
 volumes:
   db_data:
