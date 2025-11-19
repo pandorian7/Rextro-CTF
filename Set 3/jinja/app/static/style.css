@@ -1,0 +1,21 @@
+:root{
+  --bg:#fbfbfd;
+  --card:#ffffff;
+  --muted:#666;
+  --accent:#6b8cff;
+  --shadow: 0 6px 18px rgba(30,30,60,0.06);
+}
+*{box-sizing:border-box}
+body{font-family:Inter,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);color:#111;margin:0;padding:24px}
+.top{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+.btn{background:var(--accent);color:white;padding:8px 14px;border-radius:8px;text-decoration:none;display:inline-block}
+.btn-outline{background:transparent;border:1px solid rgba(0,0,0,0.06);color:var(--accent)}
+.card{background:var(--card);padding:16px;border-radius:12px;box-shadow:var(--shadow);margin-bottom:12px}
+.form-card label{display:block;margin-bottom:8px}
+input,textarea{width:100%;padding:8px;border-radius:8px;border:1px solid #e6e9f0}
+.notes-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;margin-top:12px}
+.note h3{margin:0 0 8px 0}
+.muted{color:var(--muted)}
+.content{white-space:pre-wrap}
+.form-actions{display:flex;gap:8px;margin-top:8px}
+footer{margin-top:22px;text-align:center}

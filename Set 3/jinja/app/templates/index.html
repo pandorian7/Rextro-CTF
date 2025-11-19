@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Notes</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+  </head>
+  <body>
+    <header class="top">
+      <h1>Notes</h1>
+      <div class="actions">
+        <a class="btn" href="{{ url_for('add_note') }}">Add Note</a>
+      </div>
+    </header>
+
+    <!-- jinja -->
+
+    <main>
+      {% if show_add %}
+      <section class="card form-card">
+        <h2>Add a note</h2>
+        <form method="post" action="{{ url_for('add_note') }}">
+          <label>Title
+            <input name="title" placeholder="Title" />
+          </label>
+          <label>Content
+            <textarea name="content" rows="6" placeholder="Content"></textarea>
+          </label>
+          <div class="form-actions">
+            <button type="submit" class="btn">Save</button>
+            <button type="submit" formaction="{{ url_for('preview') }}" formmethod="post" class="btn btn-outline">Preview</button>
+          </div>
+        </form>
+      </section>
+      {% endif %}
+
+      {% if preview %}
+      <section class="card preview-card">
+        <h2>Preview</h2>
+        <article class="note">
+          <h3>{{ preview.title_html }}</h3>
+          <div class="content">{{ preview.content_html }}</div>
+        </article>
+      </section>
+      {% endif %}
+
+      <section class="notes-grid">
+        {% for note in notes %}
+        <article class="card note">
+          <h3>{{ note.title_html }}</h3>
+          <div class="content">{{ note.content_html }}</div>
+        </article>
+        {% else %}
+        <p class="muted">No notes yet — click Add Note to create one.</p>
+        {% endfor %}
+      </section>
+    </main>
+
+    <footer>
+      <p class="muted">Simple note app.</p>
+    </footer>
+  </body>
+</html>
