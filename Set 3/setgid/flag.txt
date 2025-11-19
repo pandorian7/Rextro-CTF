@@ -1,0 +1,1 @@
+{flag02}:{a_linux_permission_hero} (destination: 0x080491c5) ZG9ja2VyIHJ1biAtLXJtIC1kcCAxMzM3OjEzMzcgcGFuZG9yaWFuNy9vdmVyZmxvdw==

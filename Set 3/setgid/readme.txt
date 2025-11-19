@@ -1,0 +1,1 @@
+docker run -v joejoem:/home/<uname here>:ro -d -p <port here>:22 setuid_task
