@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, Response
 from markupsafe import Markup
-from jinja2.sandbox import SandboxedEnvironment
+from jinja2 import Environment
 
 app = Flask(__name__, template_folder='templates', static_folder='static')
 
@@ -18,24 +18,9 @@ SECRET_FLAG = "FLAG{simulated_safe_flag}"
 # content only through this sandbox and pass an explicit, minimal context
 # containing only 'SECRET_FLAG'. The server never reads system files or
 # exposes modules like os, subprocess, or globals to the sandbox.
-sandbox_env = SandboxedEnvironment(autoescape=True)
+env = Environment(autoescape=True)
 
-# Add a few safe helpers to the sandbox environment. These helpers expose a
-# tightly-controlled interface (no builtins/modules) and are safe to call
-# from templates. We also expose SECRET_FLAG directly for convenience.
-def _safe_allow_globals():
-    # Return a minimal mapping; intentionally does NOT expose system objects
-    return {"SECRET_FLAG": SECRET_FLAG}
-
-def _safe_len(x):
-    try:
-        return len(x)
-    except Exception:
-        return 0
-
-sandbox_env.globals["allow_globals"] = _safe_allow_globals
-sandbox_env.globals["safe_len"] = _safe_len
-sandbox_env.globals["SECRET_FLAG"] = SECRET_FLAG
+env.globals["SECRET_FLAG"] = SECRET_FLAG
 
 
 def render_user_template(source: str) -> str:
@@ -44,45 +29,9 @@ def render_user_template(source: str) -> str:
     Returns a string (rendered output). Any rendering errors are caught and
     returned as a safe error message.
     """
-    # Detect obviously dangerous introspection or system-access patterns and
-    # return a safe simulated response instead of attempting to evaluate them.
-    # This keeps the challenge behaviour without exposing system internals.
-    danger_patterns = [
-        "__class__",
-        "__mro__",
-        "__subclasses__",
-        "__globals__",
-        "__builtins__",
-        "os.",
-        "subprocess",
-        "open(",
-        "import ",
-    ]
-
-    src = (source or "")
-    lowered = src.lower()
-    if any(p in src for p in danger_patterns):
-        # Provide a small, deterministic simulated output for known patterns.
-        if "__subclasses__" in src:
-            return "['<class \"SimulatedClassA\">', '<class \"SimulatedClassB\">']"
-        if "__mro__" in src or "__class__" in src:
-            return "<class 'str'>"
-        return "[simulated output]"
-
-    try:
-        tmpl = sandbox_env.from_string(src)
-        rendered = tmpl.render({"SECRET_FLAG": SECRET_FLAG})
-        return rendered
-    except Exception:
-        # Do not expose internal tracebacks or sandbox internals in the
-        # rendered output (e.g. messages mentioning '__class__'). Log the
-        # full exception server-side for debugging, but return a generic
-        # safe message to the client.
-        try:
-            app.logger.debug("Template render error", exc_info=True)
-        except Exception:
-            pass
-        return "[render error]"
+    tmpl = env.from_string(source or "")
+    rendered = tmpl.render()
+    return rendered
 
 
 def _get_client_ip():
